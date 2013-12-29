@@ -63,6 +63,8 @@ def user(email):
 
 @app.route('/edit', methods=['POST', 'GET'])
 @login_required
+# Validate Unique Nickname
+#def edit(g.user.nickname):
 def edit():
     form = UserForm()
     if request.method == 'POST' and form.validate_on_submit:
@@ -88,6 +90,8 @@ def after_login(resp):
         nickname = resp.nickname
         if nickname is None or nickname == "":
             nickname = resp.email.split('@')[0]
+        # Fixed Unique Problem
+        # nickname = User.make_unique_nickname(nickname)
         user = User(nickname=nickname, email=resp.email, role=ROLE_USER)
         db.session.add(user)
         db.session.commit()
