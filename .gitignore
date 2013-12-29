@@ -1,0 +1,6 @@
+*.pyc
+__pycache__/**
+py2flask/**
+tmp/**
+application/db/**
+

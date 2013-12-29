@@ -1,0 +1,66 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="row">
+	<div class="col-md-12">
+		<div class="well">
+			<h2></h2>
+			{% if error %}
+			<div class="alert alert-warning alert-dismissable">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				<strong>Warning: </strong>{{error}}
+			</div>
+			{% endif %}
+			<form name="login" class="form-horizontal" action="" role="form" method="post">
+				{{ form.hidden_tag() }}				
+				<div class="form-group {% if form.errors.openid %} has-error {% endif %}">
+					<label class="col-sm-2 control-label">E-Mail </label>
+					<div class="col-sm-10">
+						{{ form.openid(size=80, class='form-control')}}
+						{% for error in  form.errors.openid %}
+						<span class="help-block"> {{ error }} </span>
+						{% endfor %}
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-2 control-label">OpenID Provider</label>
+					<div class="col-md-10">
+						{% for pr in providers %}
+						<a href="javascript:setOpenID('{{pr.url}}', '{{pr.name}}')">{{pr.name}}</a> <br>
+						{% endfor %}
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2">&nbsp;</label>
+					<div class="col-sm-10">
+						<div class="checkbox">
+							<label>{{ form.remember_me(class='checkbox') }} Remember Me</label>							
+						</div>						
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2">&nbsp;</label>
+					<div class="col-sm-10">
+						<button tabindex="-1" class="btn btn-primary" name="submit" type="submit"><i class="glyphicon glyphicon-user"></i> Login</button>
+					</div>
+				</div>
+			</form>
+		</div>		
+	</div>	    
+</div>
+<script type="text/javascript">
+	// &lt;![CDATA[
+		function setOpenID(openid, pr)
+		{
+			var u = openid.search('<email>');
+			if(u != -1)
+			{
+				user = prompt('Enter your ' + pr + 'username');
+				openid = openid.substr(0, u) +  user;
+
+			}
+			form = document.forms['login'];
+			form.elements['openid'].value = openid;
+		}
+	//]]&gt;
+</script>
+{% endblock %}

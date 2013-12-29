@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="well">
+            <h2><img src="{{ user.avatar(128) }}">{{ user.nickname }}</h2>
+            <p>
+                {% if user.about_me %}  {{user.about_me}} <br> {% endif %}
+                {% if user.last_seen %}Last Seen on : {{user.last_seen}} {% endif %}
+                {% if g.user.id == user.id %} <a href="{{ url_for('edit') }}"> edit</a> {% endif %}
+            </p>
+            <hr>
+            {% if posts %}
+            <div class="">
+                {% for post in posts %}
+                    {% include "post.html" %}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock content %}
