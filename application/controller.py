@@ -94,11 +94,14 @@ def after_login(resp):
         user = User(nickname=nickname, email=resp.email, role=ROLE_USER)
         db.session.add(user)
         db.session.commit()
+        # Make self follow
+        db.session.add(user.follow(user))
+        db.session.commit()
     remember_me = False
     if 'remember_me' in session:
         remember_me = session['remember_me']
         session.pop('remember_me', None)
-    login_user(user, remember=remember_me)
+    login_user(user, remember=userremember_me)
     return redirect(request.args.get('next') or url_for('index'))
 
 
@@ -107,6 +110,46 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
+
+@app.route('/follow/<email>')
+@login_required
+def do_follow(email):
+    user = User.query.filter_by(email=email).first()
+    if user is None:
+        flash('User Doesn\'t exists ')
+        return redirect(url_for('index'))
+
+    if user == g.user:
+        flash('You cannot follow your-self')
+        return redirect(url_for('user', email=email))
+    u = g.user.follow(user)
+    if u is None:
+        flash('cannot follow ' + user.nickname)
+        return redirect(url_for('user', nickname = user.nickname))
+    db.session.add(u)
+    db.session.commit()
+    flash('You are now following ' + u.nickname)
+    return redirect(url_for(nickname=u.nickname))
+
+@app.route('/unfollow/<email>')
+@login_required
+def do_unfollow(email):
+    user = User.query.filter_by(email=email).first()
+    if user is None:
+        flash('User Doesn\'t exists ')
+        return redirect(url_for('index'))
+
+    if user == g.user:
+        flash('You cannot follow or unfollow your-self')
+        return redirect(url_for('user', email=email))
+    u = g.user.unfollow(user)
+    if u is None:
+        flash('cannot unfollow ' + user.nickname)
+        return redirect(url_for('user', nickname = user.nickname))
+    db.session.add(u)
+    db.session.commit()
+    flash('You are now unfollowing ' + u.nickname)
+    return redirect(url_for(nickname=u.nickname))
 
 @app.errorhandler(404)
 def internal_error(error):

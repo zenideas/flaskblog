@@ -7,7 +7,13 @@
             <p>
                 {% if user.about_me %}  {{user.about_me}} <br> {% endif %}
                 {% if user.last_seen %}Last Seen on : {{user.last_seen}} {% endif %}
-                {% if g.user.id == user.id %} <a href="{{ url_for('edit') }}"> edit</a> {% endif %}
+                {% if g.user.id == user.id %} 
+                <a href="{{ url_for('edit') }}"> edit</a> 
+                {% elif not g.user.is_following(user)  %}
+                <a href="{{ url_for('Follow', email=user.email) }}">Follow</a>
+                {% else %}
+                <a href="{{ url_for('unfollow', email=user.email) }}">Unfollow</a>
+                {% endif %}
             </p>
             <hr>
             {% if posts %}
