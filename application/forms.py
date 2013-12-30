@@ -25,7 +25,7 @@ class UserForm(Form):
         if self.nickname.data == self.original_nickname:
             return True
         user = User.query.filter_by('nickname').first()
-        if user not None:
+        if user is None:
             self.nickname.errors.append('This nickname is already in use. Please choose another one.')
             return False
         return True
