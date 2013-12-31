@@ -33,6 +33,12 @@
                   </ul>
                 </li>
               </ul>
+              <form method="post" action="{{ url_for('search') }}" class="navbar-form navbar-left" role="search">
+                  <div class="form-group">
+                    {{ g.search_form.search(class='form-control', placeholder='search') }}
+                  </div>
+                  <button class="btn btn-primary" type="submit" name="searc"> Search</button>
+              </form>
               <ul class="nav navbar-nav navbar-right">
               {% if g.user.is_authenticated()  %}
               	<li><a title="view profile"  href="{{ url_for('user', email = g.user.email) }}"> {{g.user.email}} </a></li>

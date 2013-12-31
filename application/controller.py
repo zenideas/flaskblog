@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, session, url_for, request, g
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from application import app, db, lm, oid
-from forms import LoginForm, UserForm, PostForm
+from forms import LoginForm, UserForm, PostForm, SearchForm
 from models import User, ROLE_USER, ROLE_ADMIN, Post
 from datetime import datetime
 
@@ -18,6 +18,7 @@ def before_request():
         g.user.last_seen = datetime.utcnow()
         db.session.add(g.user)
         db.session.commit()
+        g.search_form = SearchForm()
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -79,6 +80,21 @@ def edit():
         form.nickname.data = g.user.nickname
         form.about_me.data = g.user.about_me
     return render_template('edituser.html', form=form, user=g.user)
+
+
+@app.route('/search', methods=['POST'])
+@login_required
+def search():
+    if not g.search_form.validate_on_submit():
+        redirect(url_for('index'))
+    return redirect(url_for('search_result', q=g.search_form.search.data))
+
+
+@app.route('/search_result/<q>', methods=['GET'])
+@login_required
+def search_result(q):
+    results = Post.query.whoosh_search(q, app.config['MAX_SEARCH_RESULTS']).all()
+    return render_template('search_result.html', q=q, results=results)
 
 
 @oid.after_login
