@@ -61,15 +61,18 @@ class User(db.Model):
 
     @staticmethod
     def make_unique_nickname(nickname):
-        if User.query.filter_by('nickname').first() is None:
+        if User.query.filter_by(nickname=nickname).first() is None:
             return nickname
         version = 2
         while True:
             new_nickname = nickname + str(version)
-            if User.query.filter_by('nickname').first() is None:
+            if User.query.filter_by(nickname=new_nickname).first() is None:
                 break
             version += 1
-            return new_nickname
+        return new_nickname
+
+    def followed_posts(self):
+        return Post.query.join(followers, (followers.c.followed_id == Post.user_id)).filter(followers.c.follower_id == self.id).order_by(Post.timestamp.desc())
 
     def __repr__(self):
         return '<User %r>' % (self.nickname)
@@ -80,11 +83,6 @@ class Post(db.Model):
     body = db.Column(db.String(140))
     timestamp = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-    def __init__(self, body, timestamp, user_id):
-        self.body = body
-        self.timestamp = timestamp
-        self.user_id = user_id
 
     def __repr__(self):
         return '<Post %r>' % (self.body)

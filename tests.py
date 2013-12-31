@@ -1,22 +1,18 @@
 #! py2flask/bin/python
 import os
 import unittest
-from flask.ext.testing import TestCase
 
 from config_test import basedir, TESTING, CSRF_ENABLED, SQLALCHEMY_DATABASE_URI
 from application import app, db
 from application.models import User
 
 
-class TesCase(TestCase):
-
-    def create_app(self):
+class TesCase(unittest.TestCase):
+    def setUp(self):
         app.config['TESTING'] = TESTING
         app.config['CSRF_ENABLED'] = CSRF_ENABLED
         app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
-        return app
-
-    def setUp(self):
+        self.app = app.test_client()
         db.create_all()
 
     def tearDown(self):
