@@ -27,21 +27,21 @@ class TesCase(TestCase):
         u = User(nickname='john', email='john@example.com')
         avatar = u.avatar(120)
         expected = 'http://www.gravatar.com/avatar/d4c74594d841139328695756648b6bd6'
-        assert avatar[0:len(expected)] == expected
+        self.assertEqual(avatar[0:len(expected)], expected, msg='Not match')
 
     def test_make_unique_nickname(self):
         u = User(nickname='john', email='john@example.com')
         db.session.add(u)
         db.session.commit()
         nickname = User.make_unique_nickname('john')
-        assert nickname != 'john'
+        self.assertNotEqual(nickname, 'john', msg='Not match')
 
         u = User(nickname=nickname, email='susan@example.com')
         db.session.add(u)
         db.session.commit()
         nickname2 = User.make_unique_nickname('john')
-        assert nickname2 != 'john'
-        assert nickname2 != nickname
+        self.assertNotEqual(nickname2, 'john', msg='Not equal ')
+        self.assertNotEqual(nickname2, nickname, msg='Not equal')
 
     def test_follow(self):
         u1 = User(nickname='john', email='john@mayait.org')
@@ -49,28 +49,28 @@ class TesCase(TestCase):
         db.session.add(u1)
         db.session.add(u2)
         db.session.commit()
-        assert u1.unfollow(u2) is None
+        self.assertIsNone(u1.unfollow(u2), msg='Null value')
 
         u = u1.follow(u2)
         db.session.add(u)
         db.session.commit()
 
-        assert u1.follow(u2) is None
-        assert u1.is_following(u2)
-        assert u1.followed.count() == 1
-        assert u1.followed.first().nickname == 'susan'
+        self.assertIsNone(u1.follow(u2))
+        self.assertTrue(u1.is_following(u2))
+        self.assertEqual(u1.followed.count(), 1)
+        self.assertEqual(u1.followed.first().nickname, 'susan')
 
-        assert u2.followers.count() == 1
-        assert u2.followers.first().nickname == 'john'
+        self.assertEqual(u2.followers.count(), 1)
+        self.assertEqual(u2.followers.first().nickname, 'john')
 
         u = u1.unfollow(u2)
-        assert u != None
+        self.assertIsNotNone(u)
         db.session.add(u)
         db.session.commit()
 
-        assert u1.is_following(u2) is False
-        assert u1.followed.count() == 0
-        assert u2.followers.count() == 0
+        self.assertFalse(u1.is_following(u2))
+        self.assertEqual(u1.followed.count(), 0)
+        self.assertEqual(u2.followers.count(), 0)
 
 if __name__ == '__main__':
     unittest.main()
