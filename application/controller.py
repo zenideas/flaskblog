@@ -1,8 +1,8 @@
 from flask import render_template, flash, redirect, session, url_for, request, g
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from application import app, db, lm, oid
-from forms import LoginForm, UserForm
-from models import User, ROLE_USER, ROLE_ADMIN
+from forms import LoginForm, UserForm, PostForm
+from models import User, ROLE_USER, ROLE_ADMIN, Post
 from datetime import datetime
 
 
@@ -20,21 +20,22 @@ def before_request():
         db.session.commit()
 
 
-@app.route('/')
-@app.route('/index')
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
+@app.route('/index/<int:page>', methods=['GET','POST'])
 @login_required
-def index():
-    user = g.user
-    posts = [
-        {'author':{ 'nickname': 'John' }, 'body': 'Beautiful day in Portland!'},
-        {
-            'author': { 'nickname': 'Susan' },
-            'body': 'The Avengers movie was so cool!'
-        }
-    ]
+def index(page=1):
+    form = PostForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        post = Post(body=form.post.data, timestamp=datetime.utcnow(), author=g.user)
+        db.session.add(post)
+        db.session.commit()
+        flash('Your post is live fro now')
+        redirect(url_for('index'))
+    posts = g.user.followed_posts().paginate(page, app.config['POSTS_PER_PAGE'], False)
     return render_template('index.html',
         title = 'Home',
-        user = user,
+        form = form,
         posts = posts)
 
 
@@ -51,13 +52,14 @@ def login():
 
 
 @app.route('/user/<email>')
+@app.route('/user/<email>/<int:page>')
 @login_required
-def user(email):
+def user(email, page=1):
     user = User.query.filter_by(email=email).first()
     if user is None:
         flash("User " + email + "not exists")
         redirect('index')
-    posts = [{"author" : user, "body" : "Test Post #1"},{"author" : user, "body" : "Test Post #2"}]
+    posts = user.followed_posts().paginate(page, app.config['POSTS_PER_PAGE'], False)
     return render_template('user.html', user=user, posts=posts)
 
 
@@ -66,7 +68,7 @@ def user(email):
 # Validate Unique Nickname
 def edit():
     form = UserForm(g.user.nickname)
-    if request.method == 'POST' and form.validate_on_submit:
+    if request.method == 'POST' and form.validate_on_submit():
         g.user.nickname = form.nickname.data
         g.user.about_me = form.about_me.data
         db.session.add(g.user)
@@ -101,7 +103,7 @@ def after_login(resp):
     if 'remember_me' in session:
         remember_me = session['remember_me']
         session.pop('remember_me', None)
-    login_user(user, remember=userremember_me)
+    login_user(user, remember=remember_me)
     return redirect(request.args.get('next') or url_for('index'))
 
 
@@ -150,6 +152,7 @@ def do_unfollow(email):
     db.session.commit()
     flash('You are now unfollowing ' + u.nickname)
     return redirect(url_for(nickname=u.nickname))
+
 
 @app.errorhandler(404)
 def internal_error(error):

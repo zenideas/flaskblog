@@ -7,8 +7,8 @@
             <p>
                 {% if user.about_me %}  {{user.about_me}} <br> {% endif %}
                 {% if user.last_seen %}Last Seen on : {{user.last_seen}} {% endif %}
-                {% if g.user.id == user.id %} 
-                <a href="{{ url_for('edit') }}"> edit</a> 
+                {% if g.user.id == user.id %}
+                <a href="{{ url_for('edit') }}"> edit</a>
                 {% elif not g.user.is_following(user)  %}
                 <a href="{{ url_for('Follow', email=user.email) }}">Follow</a>
                 {% else %}
@@ -18,10 +18,22 @@
             <hr>
             {% if posts %}
             <div class="">
-                {% for post in posts %}
+                {% for post in posts.items %}
                     {% include "post.html" %}
                 {% endfor %}
             </div>
+            <ul class="pagination">
+              {% if posts.has_prev %}
+              <li><a href="{{ url_for('user', email=user.email, page=posts.prev_num) }}">&laquo; Newer Post</a></li>
+              {% else %}
+              <li class="disabled"><span>&laquo; Newer Post</span></li>
+              {% endif %}
+              {% if posts.has_next %}
+              <li><a href="{{ url_for('user', email=user.email, page=posts.next_num) }}"> Older Post &raquo;</a></li>
+              {% else %}
+              <li class="disabled"><span>Older Post &raquo;</span></li>
+              {% endif %}
+          </ul>
             {% endif %}
         </div>
     </div>

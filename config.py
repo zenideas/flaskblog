@@ -16,3 +16,6 @@ MAIL_USERNAME = None
 MAIL_PASSWORD = None
 
 ADMINS = ['nislam@localhost']
+
+#Pagination
+POSTS_PER_PAGE = 3
