@@ -18,7 +18,8 @@ def before_request():
         g.user.last_seen = datetime.utcnow()
         db.session.add(g.user)
         db.session.commit()
-        g.search_form = SearchForm()
+
+    g.search_form = SearchForm()
 
 
 @app.route('/', methods=['GET', 'POST'])
