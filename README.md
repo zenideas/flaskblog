@@ -35,9 +35,3 @@ py2flask/bin/pip install flask-login flask-openid flask-mail flask-wtf pytz flas
 ./db_create.py
 ```
 
-Test:
-
-```bash
-$ (cd /tmp && git clone --depth 1 https://github.com/visionmedia/git-extras.git && cd git-extras && sudo make install)
-```
-
