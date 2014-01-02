@@ -6,7 +6,7 @@
             <h2><img src="{{ user.avatar(128) }}">{{ user.nickname }}</h2>
             <p>
                 {% if user.about_me %}  {{user.about_me}} <br> {% endif %}
-                {% if user.last_seen %}Last Seen on : {{user.last_seen}} {% endif %}
+                {% if user.last_seen %}Last Seen on : {{momentjs(user.last_seen).calender() }} {% endif %}
                 {% if g.user.id == user.id %}
                 <a href="{{ url_for('edit') }}"> edit</a>
                 {% elif not g.user.is_following(user)  %}

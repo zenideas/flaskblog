@@ -1,3 +1,4 @@
 <p>
-    <img src="{{ post.author.avatar(32) }}"> {{ post.author.nickname }} says : <strong>{{ post.body }}</strong>
+    <img src="{{ post.author.avatar(32) }}"> {{ post.author.nickname }} said :
+    {{ momentjs(post.timestamp).fromNow() }} <strong>{{ post.body }}</strong>
 </p>

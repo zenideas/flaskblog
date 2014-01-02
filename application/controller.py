@@ -4,6 +4,7 @@ from application import app, db, lm, oid
 from forms import LoginForm, UserForm, PostForm, SearchForm
 from models import User, ROLE_USER, ROLE_ADMIN, Post
 from datetime import datetime
+from emails import follower_notification
 
 
 @lm.user_loader
@@ -148,6 +149,7 @@ def do_follow(email):
     db.session.add(u)
     db.session.commit()
     flash('You are now following ' + u.nickname)
+    follower_notification(user, g.user)
     return redirect(url_for(nickname=u.nickname))
 
 @app.route('/unfollow/<email>')
