@@ -1,25 +1,43 @@
-Flask Blog
-======
-Installation
-------------
-- Make Directory 'db' at application and 'tmp' under system root
-	`mkdir application/db && mkdir tmp`
-- Create the VirtualENV, name should be 'py2flask'
+# Flask Blog
+
+## Installation
+
+- Make Directory 'db' at application and 'tmp' under system root:
+
+```bash
+mkdir application/db && mkdir tmp
+```
+
+- Create the VirtualENV, name should be 'py2flask':
+
 ```bash
 $ virtualenv py2flask
 ```
-- Install Flask 
+- Install Flask:
+
 ```bash
 $ py2flask/bin/pip install flask==0.10.1
 ```
-- Install Packages
+- Install SQLAlchemy Packages:
+
 ```bash
 py2flask/bin/pip install sqlalchemy==0.8.4 sqlalchemy-migrate flask-sqlalchemy flask_whooshalchemy==0.55a
 ```
+
+- Install other dependencies:
+
 ```bash
 py2flask/bin/pip install flask-login flask-openid flask-mail flask-wtf pytz flask-babel flup flask-testing
 ```
 - Now to create the Database for the app Run: 
+
 ```bash
-db_create.py
+./db_create.py
 ```
+
+Test:
+
+```bash
+$ (cd /tmp && git clone --depth 1 https://github.com/visionmedia/git-extras.git && cd git-extras && sudo make install)
+```
+
