@@ -1,0 +1,40 @@
+# Spanish translations for PROJECT.
+# Copyright (C) 2014 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2014-01-07 15:48+0600\n"
+"PO-Revision-Date: 2014-01-07 15:53+0600\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: es <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 1.3\n"
+
+#: application/controller.py:111
+msgid "Invalid login. Please try again."
+msgstr "Spain|Invalid login. Please try again."
+
+#: application/forms.py:28
+msgid ""
+"This nickname has invalid characters. Please use letters, numbers, dots "
+"and underscores only."
+msgstr ""
+"Spain|This nickname has invalid characters. Please use letters, numbers, dots "
+"and underscores only."
+#: application/forms.py:35
+msgid "This nickname is already in use. Please choose another one."
+msgstr "Spain|This nickname is already in use. Please choose another one."
+
+#: application/templates/post.html:4
+#, python-format
+msgid "%(nickname)s said %(when)s:"
+msgstr "spain| %(nickname)s said %(when)s:"
+
