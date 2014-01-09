@@ -1,6 +1,7 @@
 from flask import render_template, flash, redirect, session, url_for, request, g
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from flask.ext.babel import gettext
+from guess_language import guessLanguage
 from application import app, db, lm, oid, babel
 from forms import LoginForm, UserForm, PostForm, SearchForm
 from models import User, ROLE_USER, ROLE_ADMIN, Post
@@ -36,10 +37,15 @@ def before_request():
 def index(page=1):
     form = PostForm()
     if request.method == 'POST' and form.validate_on_submit():
-        post = Post(body=form.post.data, timestamp=datetime.utcnow(), author=g.user)
+        language = guessLanguage(form.post.data)
+        if language == 'UNKNOWN' or len(language) > 5:
+            language = ''
+
+        post = Post(body=form.post.data, timestamp=datetime.utcnow(),
+                    author=g.user, language=language)
         db.session.add(post)
         db.session.commit()
-        flash('Your post is live fro now')
+        flash(gettext('Your post is live from now'))
         redirect(url_for('index'))
     posts = g.user.followed_posts().paginate(page, app.config['POSTS_PER_PAGE'], False)
     return render_template('index.html',

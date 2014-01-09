@@ -29,9 +29,10 @@ py2flask/bin/pip install sqlalchemy==0.8.4 sqlalchemy-migrate flask-sqlalchemy f
 ```bash
 py2flask/bin/pip install flask-login flask-openid flask-mail flask-wtf pytz flask-babel flup flask-testing
 ```
-- Now to create the Database for the app Run: 
+- Now to create the Database for the app Run:
 
 ```bash
 ./db_create.py
 ```
-
+- For Chapter 15|Ajax
+``` py2flask/bin/pip install guess-language

@@ -31,3 +31,6 @@ POSTS_PER_PAGE = 3
 
 WHOOSH_BASE = os.path.join(basedir, 'tmp/search.db')
 MAX_SEARCH_RESULTS = 50
+
+MS_TRANSLATOR_CLIENT_ID = 'flaskblog_translator'
+MS_TRANSLATOR_CLIENT_SECRET = 'e4eWfJVptT/Z/IRt4jXa4w8uJFygMqFu/UuiPRjAX/8='
